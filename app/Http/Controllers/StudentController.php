@@ -15,11 +15,13 @@ class StudentController extends Controller
         $this->studentService = $studentService;
     }
 
-
     public function save(Request $request)
     {
         $request->validate([
-            'name' => 'required | max:255', 'course' => 'required', 'email' => 'required | email', 'passwd' => 'required',
+            'name' => 'required | max:255',
+            'course' => 'required',
+            'email' => 'required | email',
+            'passwd' => 'required',
         ]);
         $data = $this->studentService->create($request->all());
         return response()->json($data);
@@ -28,7 +30,8 @@ class StudentController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required | email', 'passwd' => 'required',
+            'email' => 'required | email',
+            'passwd' => 'required',
         ]);
         $data = $this->studentService->login($request->all());
         return response()->json($data);
@@ -51,7 +54,10 @@ class StudentController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'id' => 'required', 'name' => 'required | max:255', 'course' => 'required', 'email' => 'required | email', 'passwd' => 'required',
+            'id' => 'required',
+            'name' => 'required | max:255',
+            'course' => 'required',
+            'email' => 'required | email',
         ]);
 
         $response = $this->studentService->update($request->all());
@@ -61,7 +67,7 @@ class StudentController extends Controller
     public function delete($id)
     {
 
-        $this->studentService->delete($id);
-        return response()->json(['msg' => 'estudante excluido com Sucesso']);
+        $response = $this->studentService->delete($id);
+        return response()->json($response);
     }
 }

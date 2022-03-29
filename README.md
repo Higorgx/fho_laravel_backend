@@ -15,23 +15,15 @@ Only docker and docker-compose installed =)
  2. Run docker-compose up command
  3. Done!
 
-## xDebug
+ ### Run
+ docker-compose up -d
 
-VSCode config extension to use remote xDebug
+### Exec commands
+docker-compose exec php bash
 
-```json
-{
-    "name": "Docker Xdebug",
-    "type": "php",
-    "request": "launch",
-    "port": 9003,
-    "pathMappings": {
-        "/var/www": "${workspaceRoot}" 
-    },
-},
-```
+### Down container 
+docker-compose down
 
-### Articles I read to write this repository:
-* [How to setup postgres in docker-compose](https://herewecode.io/blog/create-a-postgresql-database-using-docker-compose/)
-* [Docker images codenames article](https://medium.com/swlh/alpine-slim-stretch-buster-jessie-bullseye-bookworm-what-are-the-differences-in-docker-62171ed4531d)
-* [Install PHP 8 on Ubuntu 20.04](https://medium.com/techiediaries-com/install-php-8-on-ubuntu-20-04-b53f76ef1d62)
+### mysql
+if you have a local mysql you ĺ will need to stop the service!
+in ubuntu: sudo systemctl stop mysql

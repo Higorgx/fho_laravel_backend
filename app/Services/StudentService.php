@@ -15,7 +15,6 @@ class StudentService
     {
         $data['passwd'] = password_hash($data['passwd'], PASSWORD_BCRYPT);
         $data = $this->student->create($data);
-
         return [
             'msg' => 'estudante criado com sucesso',
             'status' => 200,
@@ -24,9 +23,18 @@ class StudentService
     public function login(array $data)
     {
 
-        $bdData = student::where('email', $data['email'])->firstOrFail();
+        $bdData = student::where('email', $data['email'])->first();
 
-        $isAuth = password_verify($data['passwd'], $bdData['passwd']);
+        if (!$bdData) {
+            return [
+                'auth' => false,
+                'status' => 401,
+
+            ];
+        } else {
+            $isAuth = password_verify($data['passwd'], $bdData['passwd']);
+        }
+
 
         if ($isAuth) {
             return [
@@ -45,6 +53,10 @@ class StudentService
     {
 
         $data = $this->student->all();
+
+        foreach ($data as $user) {
+            unset($user['passwd']);
+        };
 
         return [
             'msg' => 'Listagem efetuada com sucesso',
@@ -69,6 +81,12 @@ class StudentService
     {
 
         $data = $this->student->find($id);
+        if(!$data) {
+            return [
+                'msg' => 'falha ao deletar',
+                'status' => 400,
+            ];
+        }
         $data->delete();
 
         return [
@@ -81,7 +99,12 @@ class StudentService
     {
         $response = $data;
         $student = student::where('id', $data['id'])->first();
-        $data['passwd'] = password_hash($data['passwd'], PASSWORD_BCRYPT);
+        // se eu receber a senha no payload encriptar, se nao atribui senha que estava no banco novamente
+        if (array_key_exists("passwd", $data)) {
+            $data['passwd'] = password_hash($data['passwd'], PASSWORD_BCRYPT);
+        } else {
+            $data['passwd'] = $student['passwd'];
+        }
         $data = $student->update($data);
         if ($student != false || $data != $student) {
             return [
@@ -93,7 +116,6 @@ class StudentService
             return [
                 'msg' => 'falha ao atualizar',
                 'status' => 400,
-                $data,
             ];
         }
     }
